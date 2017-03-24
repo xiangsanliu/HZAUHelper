@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">HZAUHelper</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="account_setting">设置账号</string>
+    <string name="please_input_account">在这里输入学号</string>
+    <string name="please_input_password_jw">教务系统密码</string>
+    <string name="please_input_password_lib">图书馆密码，默认密码为学号</string>
+    <string name="please_input_password_pe">体育系统密码，默认密码为6个8</string>
+</resources>
