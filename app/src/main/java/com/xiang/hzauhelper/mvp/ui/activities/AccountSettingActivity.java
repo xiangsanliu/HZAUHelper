@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.widget.EditText;
 
 import com.xiang.hzauhelper.R;
-import com.xiang.hzauhelper.mvp.model.AccountGetter;
 import com.xiang.hzauhelper.mvp.presenter.AccountSettingPresenter;
 import com.xiang.hzauhelper.mvp.view.AccountSettingView;
 
@@ -25,13 +24,11 @@ public class AccountSettingActivity extends BaseActivity implements AccountSetti
     @BindView(R.id.save)
     CircleButton save;
 
-    AccountGetter accountGetter;
     AccountSettingPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        accountGetter = AccountGetter.newInstance(this);
         presenter = new AccountSettingPresenter(this);
         presenter.attachView(this);
         presenter.onCreate();
@@ -49,11 +46,9 @@ public class AccountSettingActivity extends BaseActivity implements AccountSetti
 
     @OnClick(R.id.save)
     public void onClick() {
-        accountGetter.setAccount(account.getText().toString());
-        accountGetter.setPasswordJw(passwordJw.getText().toString());
-        accountGetter.setPasswordLib(passwordLib.getText().toString());
-        accountGetter.setPasswordPe(passwordPe.getText().toString());
-        accountGetter.commit();
+        presenter.setAccount(account.getText().toString(), passwordJw.getText().toString(),
+                passwordLib.getText().toString(), passwordPe.getText().toString());
+        setResult(RESULT_OK);
         finish();
     }
 

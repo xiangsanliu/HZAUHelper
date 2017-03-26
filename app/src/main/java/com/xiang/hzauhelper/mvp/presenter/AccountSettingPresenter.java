@@ -1,6 +1,5 @@
 package com.xiang.hzauhelper.mvp.presenter;
 
-import android.accounts.Account;
 import android.content.Context;
 
 import com.xiang.hzauhelper.mvp.model.AccountGetter;
@@ -8,35 +7,45 @@ import com.xiang.hzauhelper.mvp.view.AccountSettingView;
 
 /**
  * Created by xiang on 2017/3/23.
+ *
  */
 
 public class AccountSettingPresenter extends BasePresenter<AccountSettingView> {
 
-    AccountGetter accountGetter;
-    Context context;
+    private AccountGetter accountGetter;
 
     public AccountSettingPresenter(Context context) {
-        this.context = context;
+        accountGetter = AccountGetter.newInstance(context);
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-
+        loadAccount(accountGetter.getAccount());
+        loadPasswordJw(accountGetter.getPasswordJw());
+        loadPasswordLib(accountGetter.getPasswrodLib());
+        loadPasswordPe(accountGetter.getPasswordPe());
     }
 
-    public void loadAccount(String account) {
-
+    private void loadAccount(String account) {
+        view.loadAccount(account);
     }
-    public void loadPasswordJw(String passwordJw) {
-
+    private void loadPasswordJw(String passwordJw) {
+        view.loadPasswordJw(passwordJw);
     }
-    public void loadPasswordLib(String passwordLib) {
-
+    private void loadPasswordLib(String passwordLib) {
+        view.loadPasswordLib(passwordLib);
     }
-
-    public void loadPasswordPe(String passwordPe) {
-
+    private void loadPasswordPe(String passwordPe) {
+        view.loadPasswordPe(passwordPe);
+    }
+    public void setAccount(String accountT, String passwordJwT, String passwordLibT
+            , String passwordPeT) {
+        accountGetter.setAccount(accountT);
+        accountGetter.setPasswordJw(passwordJwT);
+        accountGetter.setPasswordLib(passwordLibT);
+        accountGetter.setPasswordPe(passwordPeT);
+        accountGetter.commit();
     }
 
 }

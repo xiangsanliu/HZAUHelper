@@ -19,10 +19,13 @@ import butterknife.ButterKnife;
 public abstract class BaseActivity extends AppCompatActivity {
 
     Toolbar toolbar;
+    protected String TAG;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TAG = this.getLocalClassName();
+        TAG = TAG.substring(TAG.lastIndexOf('.'));
         setContentView(getLayoutId());
         ButterKnife.bind(this);
         initToolbar();
