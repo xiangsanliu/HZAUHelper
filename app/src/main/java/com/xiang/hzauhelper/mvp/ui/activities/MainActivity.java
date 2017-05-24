@@ -1,6 +1,8 @@
 package com.xiang.hzauhelper.mvp.ui.activities;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,8 +18,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.xiang.hzauhelper.R;
 import com.xiang.hzauhelper.RequestCodes;
@@ -25,6 +29,7 @@ import com.xiang.hzauhelper.mvp.presenter.MainPresenter;
 import com.xiang.hzauhelper.mvp.view.MainView;
 
 import java.io.IOException;
+import java.net.ServerSocket;
 
 import butterknife.BindView;
 
@@ -36,6 +41,7 @@ public class MainActivity extends BaseActivity
     NavigationView navView;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
+    TextView accountTV;
 
     MainPresenter presenter;
     String cookieJw = "";
@@ -83,11 +89,7 @@ public class MainActivity extends BaseActivity
                 startActivityForResult(new Intent(this, AccountSettingActivity.class), RequestCodes.SETACCOUNT);
                 break;
             case R.id.exam_plan:
-                try {
-                    onExamPlan();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                onExamPlan();
                 break;
         }
 
@@ -103,6 +105,8 @@ public class MainActivity extends BaseActivity
         drawerLayout.setDrawerListener(toggle);
         toggle.syncState();
         navView.setNavigationItemSelectedListener(this);
+//        View view = navView.inflateHeaderView(R.layout.nav_header_main);
+        accountTV = (TextView) navView.getHeaderView(0).findViewById(R.id.account);
     }
 
     @Override
@@ -130,21 +134,37 @@ public class MainActivity extends BaseActivity
         Log.d(TAG, "login");
     }
 
-    private void onExamPlan() throws IOException {
-        if (cookieJw.length()>0) {
-            Intent intent = new Intent(MainActivity.this, ExamPlanActivity.class);
-            intent.putExtra("account", presenter.getAccount());
-            intent.putExtra("passwordJw", presenter.getPasswordJw());
-            intent.putExtra("cookieJw", cookieJw);
-            startActivity(intent);
-        } else {
-            presenter.showCheckCodeInputer();
-        }
+//    private void onExamPlan() throws IOException {
+//        if (cookieJw.length()>0) {
+//            Intent intent = new Intent(MainActivity.this, ExamPlanActivity.class);
+//            intent.putExtra("account", presenter.getAccount());
+//            intent.putExtra("passwordJw", presenter.getPasswordJw());
+//            intent.putExtra("cookieJw", cookieJw);
+//            startActivity(intent);
+//        } else {
+//            presenter.showCheckCodeInputer();
+//        }
+//    }
+
+    private void onExamPlan() {
+        Intent intent = new Intent(MainActivity.this, ExamPlanActivity.class);
+        startActivity(intent);
     }
 
     @Override
     public void loadBitmap(Bitmap bitmap) {
         createCheckCodeDialog(bitmap).create().show();
+    }
+
+    @Override
+    public void loadAccountTv(String account) {
+        accountTV.setText(account);
+    }
+
+    @Override
+    public void hideSoftInput(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     private AlertDialog.Builder createCheckCodeDialog(Bitmap bitmap) {
@@ -169,9 +189,19 @@ public class MainActivity extends BaseActivity
                         intent.putExtra("account", presenter.getAccount());
                         intent.putExtra("passwordJw", presenter.getPasswordJw());
                         intent.putExtra("checkCode", checkCode);
+                        hideSoftInput(view.findViewById(R.id.code_edit));
                         startActivityForResult(intent, RequestCodes.SETCOOKIEJW);
                     }
                 });
     }
 
+    @Override
+    public void showProgress(ProgressDialog progressDialog) {
+
+    }
+
+    @Override
+    public void hidePregress(ProgressDialog progressDialog) {
+
+    }
 }

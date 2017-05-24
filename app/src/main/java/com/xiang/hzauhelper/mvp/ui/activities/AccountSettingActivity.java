@@ -1,11 +1,15 @@
 package com.xiang.hzauhelper.mvp.ui.activities;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.widget.EditText;
 
 import com.xiang.hzauhelper.R;
+import com.xiang.hzauhelper.entities.ExamTerm;
 import com.xiang.hzauhelper.mvp.presenter.AccountSettingPresenter;
 import com.xiang.hzauhelper.mvp.view.AccountSettingView;
+
+import org.litepal.crud.DataSupport;
 
 import at.markushi.ui.CircleButton;
 import butterknife.BindView;
@@ -49,6 +53,7 @@ public class AccountSettingActivity extends BaseActivity implements AccountSetti
         presenter.setAccount(account.getText().toString(), passwordJw.getText().toString(),
                 passwordLib.getText().toString(), passwordPe.getText().toString());
         setResult(RESULT_OK);
+        DataSupport.deleteAll(ExamTerm.class);
         finish();
     }
 
@@ -70,5 +75,15 @@ public class AccountSettingActivity extends BaseActivity implements AccountSetti
     @Override
     public void loadPasswordPe(String passwordPeText) {
         passwordPe.setText(passwordPeText);
+    }
+
+    @Override
+    public void showProgress(ProgressDialog progressDialog) {
+
+    }
+
+    @Override
+    public void hidePregress(ProgressDialog progressDialog) {
+
     }
 }

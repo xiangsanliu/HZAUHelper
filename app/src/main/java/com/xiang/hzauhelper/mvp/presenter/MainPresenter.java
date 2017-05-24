@@ -31,35 +31,11 @@ public class MainPresenter extends BasePresenter<MainView> {
         super.onCreate();
         accountGetter = AccountGetter.newInstance(context);
         httpMethodGet = HttpMethodGet.newInstance();
+        view.loadAccountTv(accountGetter.getAccount());
     }
 
     public MainPresenter(Context context) {
         this.context = context;
-    }
-
-    public void showCheckCodeInputer() throws IOException {
-        Observer<Bitmap> observer = new Observer<Bitmap>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(Bitmap bitmap) {
-                view.loadBitmap(bitmap);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        };
-        httpMethodGet.getCheckCode().subscribe(observer);
     }
 
     public String getAccount() {

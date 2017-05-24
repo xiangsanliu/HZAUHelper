@@ -1,13 +1,9 @@
 package com.xiang.hzauhelper.network;
 
 import android.graphics.Bitmap;
-
-import com.xiang.hzauhelper.entities.JwUrls;
-
+import android.util.Log;
 import org.jsoup.nodes.Document;
-
 import java.io.IOException;
-
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -36,27 +32,38 @@ public class HttpMethodGet {
         }
     }
 
-    public Observable<Bitmap> getCheckCode() throws IOException {
+    public Observable<Bitmap> getCheckCode(final JwGetter jwGetter) throws IOException {
         return Observable.create(new ObservableOnSubscribe<Bitmap>() {
                     @Override
                     public void subscribe(ObservableEmitter<Bitmap> e) throws Exception {
-                        e.onNext(JwGetter.newInstance().getCodeBitmap());
+                        e.onNext(jwGetter.getCodeBitmap());
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
     }
 
-    public Observable<Document> getExamPlanDoc(final String account, final String password, final String code) {
+    public Observable<Document> getExamPlanDoc(final JwGetter jwGetter, final String account
+            , final String password, final String code) {
         return Observable.create(new ObservableOnSubscribe<Document>() {
                     @Override
                     public void subscribe(ObservableEmitter<Document> e) throws Exception {
-                        e.onNext(JwGetter.newInstance().getExamPlanDoc(account, password, code));
+                        e.onNext(jwGetter.getExamPlanDoc(account, password, code));
                         e.onComplete();
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<Document> getEmptyRoomDoc(final JwGetter jwGetter, final String account, final String password, final String code) {
+        return Observable.create(new ObservableOnSubscribe<Document>() {
+            @Override
+            public void subscribe(ObservableEmitter<Document> e) throws Exception {
+                e.onNext(jwGetter.getEmptyRoomDoc(account, password, code));
+                e.onComplete();
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
     }
 
 }

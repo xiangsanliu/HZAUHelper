@@ -11,4 +11,7 @@
     <string name="please_input_password_lib">图书馆密码，默认密码为学号</string>
     <string name="please_input_password_pe">体育系统密码，默认密码为6个8</string>
     <string name="exam_plan">考试安排</string>
+    <string name="exam_time">考试时间:</string>
+    <string name="exam_place">考试地点:</string>
+    <string name="seat_num">座位号:</string>
 </resources>

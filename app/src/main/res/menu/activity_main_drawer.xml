@@ -3,7 +3,7 @@
 
     <item
             android:id="@+id/account_setting"
-            android:icon="@drawable/ic_description_black_24dp"
+            android:icon="@drawable/ic_account_circle_white_24dp"
             android:title="@string/account_setting" />
     <item
             android:id="@+id/exam_plan"
