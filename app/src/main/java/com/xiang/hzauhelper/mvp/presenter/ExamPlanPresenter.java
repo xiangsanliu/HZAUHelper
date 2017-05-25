@@ -34,11 +34,10 @@ public class ExamPlanPresenter extends BasePresenter<ExamPlanView> {
     private String account, passwordJw;
     private Activity activity;
     private ProgressDialog progressDialog;
-    private JwGetter jwGetter;
 
     public ExamPlanPresenter(Activity activity) {
         this.activity = activity;
-        httpMethodGet = HttpMethodGet.newInstance();
+        httpMethodGet = HttpMethodGet.newInstance(new JwGetter());
         createProgressDialog();
         initAccount();
     }
@@ -58,7 +57,7 @@ public class ExamPlanPresenter extends BasePresenter<ExamPlanView> {
     }
 
     public void setExamPlanDoc(String code) {
-        httpMethodGet.getExamPlanDoc(jwGetter, account, passwordJw, code).subscribe(new Observer<Document>() {
+        httpMethodGet.getExamPlanDoc(account, passwordJw, code).subscribe(new Observer<Document>() {
             @Override
             public void onSubscribe(Disposable d) {
             }
@@ -72,7 +71,8 @@ public class ExamPlanPresenter extends BasePresenter<ExamPlanView> {
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
-                view.hidePregress(progressDialog);
+                view.dismissProgress(progressDialog);
+                showToast("获取失败，请重试");
             }
 
             @Override
@@ -83,10 +83,10 @@ public class ExamPlanPresenter extends BasePresenter<ExamPlanView> {
 
     private void solveExamPlanDoc(Document document) {
         List<ExamTerm> examTermList = new ArrayList<>();
-        Elements terms = document.getElementsByTag("option");
-        for (int i=1; i<terms.size()-3; i++) {
-            Log.d("xuenian", terms.get(i).text());
-        }
+//        Elements terms = document.getElementsByTag("option");
+//        for (int i=1; i<terms.size()-3; i++) {
+//            Log.d("xuenian", terms.get(i).text());
+//        }
         Elements examTerms = document.getElementsByTag("table").get(0).getElementsByTag("tr");
         for (int i=1; i<examTerms.size(); i++) {
             Elements elements = examTerms.get(i).getElementsByTag("td");
@@ -98,7 +98,7 @@ public class ExamPlanPresenter extends BasePresenter<ExamPlanView> {
             examTermList.add(examTerm);
         }
         loadExamPlanList(examTermList);
-        hidePregress();
+        dismissProgress();
     }
 
     private void loadExamPlanList(List<ExamTerm> examTermList){
@@ -119,9 +119,8 @@ public class ExamPlanPresenter extends BasePresenter<ExamPlanView> {
     }
 
     public void showCheckCodeInputer() throws IOException {
-        jwGetter = new JwGetter();
         view.showProgress(progressDialog);
-        httpMethodGet.getCheckCode(jwGetter).subscribe(new Observer<Bitmap>() {
+        httpMethodGet.getCheckCode().subscribe(new Observer<Bitmap>() {
             @Override
             public void onSubscribe(Disposable d) {
 
@@ -153,8 +152,8 @@ public class ExamPlanPresenter extends BasePresenter<ExamPlanView> {
         DataSupport.deleteAll(ExamTerm.class);
     }
 
-    public void hidePregress() {
-        view.hidePregress(progressDialog);
+    @Override
+    public void dismissProgress() {
+        view.dismissProgress(progressDialog);
     }
-
 }

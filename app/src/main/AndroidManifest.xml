@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.xiang.hzauhelper">
 
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -23,6 +22,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -30,9 +30,15 @@
             android:name=".mvp.ui.activities.AccountSettingActivity"
             android:parentActivityName=".mvp.ui.activities.MainActivity" />
         <activity
+            android:label="考试安排"
             android:name=".mvp.ui.activities.ExamPlanActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:parentActivityName=".mvp.ui.activities.MainActivity"/>
+            android:parentActivityName=".mvp.ui.activities.MainActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:label="空教室查询"
+            android:name=".mvp.ui.activities.EmptyRoomActivity"
+            android:parentActivityName=".mvp.ui.activities.MainActivity"
+            android:windowSoftInputMode="stateHidden"/>
     </application>
 
 </manifest>

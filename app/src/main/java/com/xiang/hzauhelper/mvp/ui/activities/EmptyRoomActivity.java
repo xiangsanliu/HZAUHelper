@@ -4,102 +4,72 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 
 import com.xiang.hzauhelper.R;
-import com.xiang.hzauhelper.adapter.ExamPlanListAdapter;
-import com.xiang.hzauhelper.entities.ExamTerm;
-import com.xiang.hzauhelper.mvp.presenter.ExamPlanPresenter;
-import com.xiang.hzauhelper.mvp.view.ExamPlanView;
-
-import org.litepal.crud.DataSupport;
-
-import java.io.IOException;
+import com.xiang.hzauhelper.mvp.presenter.EmptyRoomPresenter;
+import com.xiang.hzauhelper.mvp.view.EmptyRoomView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
+public class EmptyRoomActivity extends BaseActivity implements EmptyRoomView {
 
-public class ExamPlanActivity extends BaseActivity implements ExamPlanView {
 
-    ExamPlanPresenter presenter;
-    @BindView(R.id.exam_plan_list)
-    RecyclerView examPlanList;
-    @BindView(R.id.refresh_exam)
-    FloatingActionButton refreshExam;
+    EmptyRoomPresenter presenter = null;
+    @BindView(R.id.select_date)
+    Spinner selectDate;
+    @BindView(R.id.select_lesson_num)
+    Spinner selectLessonNum;
+    @BindView(R.id.query)
+    Button query;
+    @BindView(R.id.empty_room_list)
+    RecyclerView emptyRoomList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new ExamPlanPresenter(this);
+        presenter = new EmptyRoomPresenter(this);
         presenter.attachView(this);
         presenter.onCreate();
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     protected void initViews() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    public ExamPlanActivity() {
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override
     public int getLayoutId() {
-        return R.layout.activity_exam_plan;
-    }
-
-    @Override
-    public void loadTerms() {
-
-    }
-
-    @Override
-    public void loadYear() {
-
-    }
-
-    @Override
-    public void loadCheckCode(Bitmap bitmap) {
-        createCheckCodeDialog(bitmap).create().show();
-    }
-
-    @Override
-    public void loadExamPlanList(ExamPlanListAdapter adapter) {
-        examPlanList.setLayoutManager(new LinearLayoutManager(this));
-        examPlanList.setAdapter(adapter);
+        return R.layout.activity_empty_room;
     }
 
     @Override
     public void showProgress(ProgressDialog progressDialog) {
-        progressDialog.show();
-    }
 
+    }
 
     @Override
     public void dismissProgress(ProgressDialog progressDialog) {
-        progressDialog.dismiss();
-    }
 
-    @OnClick(R.id.refresh_exam)
-    public void onClick(){
-        try {
-            presenter.showCheckCodeInputer();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private AlertDialog.Builder createCheckCodeDialog(Bitmap bitmap) {
@@ -114,23 +84,45 @@ public class ExamPlanActivity extends BaseActivity implements ExamPlanView {
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
                         presenter.dismissProgress();
                     }
                 })
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        String checkCode = ((EditText)view.findViewById(R.id.code_edit)).getText().toString();
+                        String checkCode = ((EditText) view.findViewById(R.id.code_edit)).getText().toString();
                         hideSoftInput(view.findViewById(R.id.code_edit));
-                        presenter.setExamPlanDoc(checkCode);
+                        presenter.showProgress();
+                        presenter.setSpinner(checkCode);
                     }
                 });
     }
 
-    @Override
     public void hideSoftInput(View view) {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    @Override
+    public void loadCheckCode(Bitmap bitmap) {
+        createCheckCodeDialog(bitmap).create().show();
+    }
+
+    @Override
+    public void initSpinner(String[] startDate, String[] lessonNum) {
+        ArrayAdapter<String>  adapter;
+        adapter = new ArrayAdapter<>(this, R.layout.my_spinner_item, startDate);
+        adapter.setDropDownViewResource(R.layout.my_dropdown_spinner_item);
+        selectDate.setAdapter(adapter);
+        adapter = new ArrayAdapter<>(this, R.layout.my_spinner_item, lessonNum);
+        adapter.setDropDownViewResource(R.layout.my_dropdown_spinner_item);
+        selectLessonNum.setAdapter(adapter);
+        presenter.dismissProgress();
+    }
+
+    @OnClick(R.id.query)
+    public void onClick() {
+        presenter.getEmptyRoom(selectDate.getSelectedItemPosition(), selectLessonNum.getSelectedItemPosition());
+    }
 }

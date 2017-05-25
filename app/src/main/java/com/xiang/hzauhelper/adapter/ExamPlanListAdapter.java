@@ -41,7 +41,7 @@ public class ExamPlanListAdapter extends RecyclerView.Adapter<ExamPlanListAdapte
         holder.examName.setText(examTerm.courseName);
         holder.examPlace.setText(examTerm.examPlace);
         holder.examTime.setText(examTerm.examTime);
-        holder.seatNum.setText(examTerm.seatNum);
+//        holder.seatNum.setText(examTerm.seatNum);
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,7 +64,7 @@ public class ExamPlanListAdapter extends RecyclerView.Adapter<ExamPlanListAdapte
             examName = (TextView) itemView.findViewById(R.id.exam_name);
             examTime = (TextView) itemView.findViewById(R.id.exam_time);
             examPlace = (TextView) itemView.findViewById(R.id.exam_place);
-            seatNum = (TextView) itemView.findViewById(R.id.seat_num);
+//            seatNum = (TextView) itemView.findViewById(R.id.seat_num);
         }
     }
 }

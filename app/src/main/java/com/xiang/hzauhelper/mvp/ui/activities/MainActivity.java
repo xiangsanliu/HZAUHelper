@@ -91,6 +91,9 @@ public class MainActivity extends BaseActivity
             case R.id.exam_plan:
                 onExamPlan();
                 break;
+            case R.id.empty_room:
+                onEmptyRoom();
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -151,6 +154,10 @@ public class MainActivity extends BaseActivity
         startActivity(intent);
     }
 
+    private void onEmptyRoom() {
+        startActivity(new Intent(this, EmptyRoomActivity.class));
+    }
+
     @Override
     public void loadBitmap(Bitmap bitmap) {
         createCheckCodeDialog(bitmap).create().show();
@@ -201,7 +208,7 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void hidePregress(ProgressDialog progressDialog) {
+    public void dismissProgress(ProgressDialog progressDialog) {
 
     }
 }

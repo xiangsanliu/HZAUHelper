@@ -9,5 +9,5 @@ import android.app.ProgressDialog;
 
 public interface BaseView {
     public void showProgress(ProgressDialog progressDialog);
-    public void hidePregress(ProgressDialog progressDialog);
+    public void dismissProgress(ProgressDialog progressDialog);
 }

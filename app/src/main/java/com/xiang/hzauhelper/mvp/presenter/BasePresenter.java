@@ -1,6 +1,9 @@
 package com.xiang.hzauhelper.mvp.presenter;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.xiang.hzauhelper.mvp.view.BaseView;
 
@@ -19,6 +22,17 @@ public abstract class BasePresenter <T extends BaseView> {
 
     public void onCreate() {
 
+    }
+
+    public void showProgress(){
+
+    }
+    public void dismissProgress(){
+    }
+
+    @SuppressLint("ShowToast")
+    public void showToast(String content) {
+        Toast.makeText((Context) view, content, Toast.LENGTH_SHORT).show();
     }
 
 }

@@ -28,6 +28,7 @@ public class JwGetter {
     private String cookie;
 
     private final String MAIN_URL = "http://jw.hzau.edu.cn/";
+    String emptyRoomUrl;
 //    private String examPlanUrl;
 //    private String courseTableUrl;
 
@@ -116,21 +117,52 @@ public class JwGetter {
     }
 
     Document getEmptyRoomDoc(String account, String password, String code) throws IOException {
-        String emptyRoomUrl = getEmptyRoomUrl(account, password, code);
-        Request request1 = new Request.Builder()
+        emptyRoomUrl = getEmptyRoomUrl(account, password, code);
+        Request request = new Request.Builder()
                 .url(emptyRoomUrl)
                 .addHeader("Cookie", cookie)
                 .addHeader("Referer", "http://jw.hzau.edu.cn/xs_main.aspx?xh="+account)
                 .build();
-        Response  response = okHttpClient.newCall(request1).execute();
-//        Document document = Jsoup.parse(response.body().string());
-//        Elements elements = null;
-//        elements = document.getElementsByAttributeValue("type", "hidden");
-//        String __EVENTTARGET = elements.get(0).attr("value");
-//        String __EVENTARGUMENT = elements.get(0).attr("value");
-//        String __VIEWSTATE = elements.get(0).attr("value");
-//        elements = document.getElementsByAttributeValue("name", "kssj");
+        Response  response = okHttpClient.newCall(request).execute();
         return Jsoup.parse(response.body().string());
+    }
+
+    Document getEmptyRoomDocument(String date, String lessonNum, String __VIEWSTATE, String xn
+            , String xq, String account) throws IOException {
+        Log.d("date", date);
+        Log.d("lessonNum", lessonNum);
+        FormBody formBody = new FormBody.Builder()
+//                .add("__EVENTTARGET", "dpDataGrid1:txtPageSize")
+                .add("__ENENTTARGET", "sjd")
+                .add("__EVENTARGUMENT", "")
+                .add("__VIEWSTATE", __VIEWSTATE)
+                .add("xiaoq", "本部")
+                .add("jslb", "")
+                .add("min_zws", "0")
+                .add("max_zws", "")
+                .add("kssj", date)
+                .add("jssj", date)
+                .add("xqj", date.indexOf(0)+"")
+                .add("ddlDsz", "")
+                .add("sjd", lessonNum)
+                .add("Button2", "空教室查询")
+//                .add("dpDataGrid1:txtPageSize", "400")
+//                .add("dpDataGrid1:txtChoosePage", "1")
+                .add("xn", xn)
+                .add("xq", xq)
+                .add("ddlSyXn", xn)
+                .add("ddlSyxq", xq)
+                .build();
+        Request request = new Request.Builder()
+                .url(emptyRoomUrl)
+                .post(formBody)
+                .addHeader("Host", "jw.hzau.edu.cn")
+                .addHeader("Cookie", cookie)
+                .addHeader("Referer", "http://jw.hzau.edu.cn/xs_main.aspx?xh="+account)
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        String content = response.body().string();
+        return Jsoup.parse(content);
     }
 
 //    private Document getCourseDocument(String account, String password, String code) throws IOException {

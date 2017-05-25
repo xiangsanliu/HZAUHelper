@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import com.xiang.hzauhelper.mvp.model.AccountGetter;
 import com.xiang.hzauhelper.mvp.view.MainView;
 import com.xiang.hzauhelper.network.HttpMethodGet;
+import com.xiang.hzauhelper.network.JwGetter;
 
 import org.reactivestreams.Subscriber;
 
@@ -30,7 +31,7 @@ public class MainPresenter extends BasePresenter<MainView> {
     public void onCreate() {
         super.onCreate();
         accountGetter = AccountGetter.newInstance(context);
-        httpMethodGet = HttpMethodGet.newInstance();
+        httpMethodGet = HttpMethodGet.newInstance(new JwGetter());
         view.loadAccountTv(accountGetter.getAccount());
     }
 

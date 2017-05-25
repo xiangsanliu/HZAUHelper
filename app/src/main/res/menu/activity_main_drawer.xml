@@ -2,13 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-            android:id="@+id/account_setting"
-            android:icon="@drawable/ic_account_circle_white_24dp"
-            android:title="@string/account_setting" />
+        android:id="@+id/account_setting"
+        android:icon="@drawable/ic_account_circle_white_24dp"
+        android:title="@string/account_setting" />
     <item
-            android:id="@+id/exam_plan"
-            android:icon="@drawable/ic_description_black_24dp"
-            android:title="@string/exam_plan"/>
+        android:id="@+id/exam_plan"
+        android:icon="@drawable/ic_description_black_24dp"
+        android:title="@string/exam_plan"/>
+    <item
+        android:id="@+id/empty_room"
+        android:icon="@drawable/empty_room"
+        android:title="@string/empty_room"/>
 
 
 </menu>

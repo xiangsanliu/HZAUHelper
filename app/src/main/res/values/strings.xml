@@ -14,4 +14,6 @@
     <string name="exam_time">考试时间:</string>
     <string name="exam_place">考试地点:</string>
     <string name="seat_num">座位号:</string>
+    <string name="empty_room">空教室查询</string>
+    <string name="query">查询</string>
 </resources>

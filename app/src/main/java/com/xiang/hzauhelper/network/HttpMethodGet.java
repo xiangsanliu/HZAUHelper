@@ -19,20 +19,21 @@ import io.reactivex.schedulers.Schedulers;
 public class HttpMethodGet {
 
     private static HttpMethodGet httpMethodGet;
+    private JwGetter jwGetter;
 
-    private HttpMethodGet() {
-
+    private HttpMethodGet(JwGetter jwGetter) {
+        this.jwGetter = jwGetter;
     }
 
-    public static HttpMethodGet newInstance() {
+    public static HttpMethodGet newInstance(JwGetter jwGetter) {
         if (httpMethodGet != null ) {
             return httpMethodGet;
         } else {
-            return new HttpMethodGet();
+            return new HttpMethodGet(jwGetter);
         }
     }
 
-    public Observable<Bitmap> getCheckCode(final JwGetter jwGetter) throws IOException {
+    public Observable<Bitmap> getCheckCode() throws IOException {
         return Observable.create(new ObservableOnSubscribe<Bitmap>() {
                     @Override
                     public void subscribe(ObservableEmitter<Bitmap> e) throws Exception {
@@ -43,7 +44,7 @@ public class HttpMethodGet {
                 .subscribeOn(Schedulers.io());
     }
 
-    public Observable<Document> getExamPlanDoc(final JwGetter jwGetter, final String account
+    public Observable<Document> getExamPlanDoc(final String account
             , final String password, final String code) {
         return Observable.create(new ObservableOnSubscribe<Document>() {
                     @Override
@@ -56,11 +57,22 @@ public class HttpMethodGet {
                 .subscribeOn(Schedulers.io());
     }
 
-    public Observable<Document> getEmptyRoomDoc(final JwGetter jwGetter, final String account, final String password, final String code) {
+    public Observable<Document> getEmptyRoomDoc(final String account, final String password, final String code) {
         return Observable.create(new ObservableOnSubscribe<Document>() {
             @Override
             public void subscribe(ObservableEmitter<Document> e) throws Exception {
                 e.onNext(jwGetter.getEmptyRoomDoc(account, password, code));
+                e.onComplete();
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<Document> getEmptyRoomDocument(final String date, final String lessonNum
+            , final String __VIEWSTATE, final String xn, final String xq, final String account) {
+        return Observable.create(new ObservableOnSubscribe<Document>() {
+            @Override
+            public void subscribe(ObservableEmitter<Document> e) throws Exception {
+                e.onNext(jwGetter.getEmptyRoomDocument(date, lessonNum, __VIEWSTATE, xn, xq,account));
                 e.onComplete();
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());

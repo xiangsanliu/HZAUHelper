@@ -83,7 +83,7 @@ public class AccountSettingActivity extends BaseActivity implements AccountSetti
     }
 
     @Override
-    public void hidePregress(ProgressDialog progressDialog) {
+    public void dismissProgress(ProgressDialog progressDialog) {
 
     }
 }
