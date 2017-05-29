@@ -30,15 +30,16 @@
             android:name=".mvp.ui.activities.AccountSettingActivity"
             android:parentActivityName=".mvp.ui.activities.MainActivity" />
         <activity
-            android:label="考试安排"
             android:name=".mvp.ui.activities.ExamPlanActivity"
+            android:label="考试安排"
             android:parentActivityName=".mvp.ui.activities.MainActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:label="空教室查询"
             android:name=".mvp.ui.activities.EmptyRoomActivity"
+            android:label="空教室查询"
             android:parentActivityName=".mvp.ui.activities.MainActivity"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".mvp.ui.activities.SearchBookActivity"></activity>
     </application>
 
 </manifest>

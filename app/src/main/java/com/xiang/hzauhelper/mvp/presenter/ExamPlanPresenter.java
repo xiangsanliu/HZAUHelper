@@ -3,14 +3,13 @@ package com.xiang.hzauhelper.mvp.presenter;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import com.xiang.hzauhelper.adapter.ExamPlanListAdapter;
 import com.xiang.hzauhelper.entities.ExamTerm;
 import com.xiang.hzauhelper.mvp.model.AccountGetter;
 import com.xiang.hzauhelper.mvp.view.ExamPlanView;
 import com.xiang.hzauhelper.network.HttpMethodGet;
-import com.xiang.hzauhelper.network.JwGetter;
+import com.xiang.hzauhelper.network.DocumentGetter;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -37,7 +36,7 @@ public class ExamPlanPresenter extends BasePresenter<ExamPlanView> {
 
     public ExamPlanPresenter(Activity activity) {
         this.activity = activity;
-        httpMethodGet = HttpMethodGet.newInstance(new JwGetter());
+        httpMethodGet = HttpMethodGet.newInstance(new DocumentGetter());
         createProgressDialog();
         initAccount();
     }

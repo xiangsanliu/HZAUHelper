@@ -4,15 +4,20 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.xiang.hzauhelper.RequestCodes;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.FormBody;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -22,7 +27,7 @@ import okhttp3.Response;
  *
  */
 
-public class JwGetter {
+public class DocumentGetter {
 
     private OkHttpClient okHttpClient;
     private String cookie;
@@ -177,5 +182,40 @@ public class JwGetter {
 //        Response courseResponse = okHttpClient.newCall(courseRequest).execute();
 //        return Jsoup.parse(courseResponse.body().string());
 //    }
+    public Document getBookListDocument(String bookName, int type) throws IOException {
+        String url = "http://218.199.76.6:8991/F/";
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        okHttpClient = new OkHttpClient();
+        Response response = okHttpClient.newCall(request).execute();
+        String content = response.body().string();
+        content = content.substring(content.lastIndexOf("http"));
+        url = content.substring(0, content.indexOf('\''));
+        request = new Request.Builder()
+                .url(url)
+                .build();
+        response = okHttpClient.newCall(request).execute();
+        Document document = Jsoup.parse(response.body().string());
+        Elements elements = document.getElementsByAttributeValue("name", "form1");
+        url = elements.get(0).attr("action");
+
+        if (type == RequestCodes.LIB_CHINESE) {
+            url = url + "?func=find-b&find_code=WRD&request="+bookName+"&local_base=HZA01&filter_code_1=" +
+                    "WLN&filter_request_1=&filter_code_2=WYR&filter_request_2=&filter_code_3=WY" +
+                    "R&filter_request_3=&filter_code_4=WFM&filter_request_4=&filter_code_5=WSL&" +
+                    "filter_request_5=";
+        } else {
+            url = url + "func=find-b&find_code=WRD&request="+bookName+"&local_base=HZA09&filter_code" +
+                    "_1=WLN&filter_request_1=&filter_code_2=WYR&filter_request_2=&filter_cod" +
+                    "e_3=WYR&filter_request_3=&filter_code_4=WFM&filter_request_4=&filter_co" +
+                    "de_5=WSL&filter_request_5=0";
+        }
+        request = new Request.Builder()
+                .url(url)
+                .build();
+        response = okHttpClient.newCall(request).execute();
+        return Jsoup.parse(response.body().string());
+    }
 
 }

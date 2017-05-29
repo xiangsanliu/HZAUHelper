@@ -8,7 +8,7 @@ import android.util.Log;
 import com.xiang.hzauhelper.mvp.model.AccountGetter;
 import com.xiang.hzauhelper.mvp.view.EmptyRoomView;
 import com.xiang.hzauhelper.network.HttpMethodGet;
-import com.xiang.hzauhelper.network.JwGetter;
+import com.xiang.hzauhelper.network.DocumentGetter;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -52,7 +52,7 @@ public class EmptyRoomPresenter extends BasePresenter<EmptyRoomView> {
     @Override
     public void onCreate() {
         super.onCreate();
-        httpMethodGet = HttpMethodGet.newInstance(new JwGetter());
+        httpMethodGet = HttpMethodGet.newInstance(new DocumentGetter());
         try {
             showCheckCodeInputer();
         } catch (IOException e) {

@@ -1,7 +1,7 @@
 package com.xiang.hzauhelper.network;
 
 import android.graphics.Bitmap;
-import android.util.Log;
+
 import org.jsoup.nodes.Document;
 import java.io.IOException;
 import io.reactivex.Observable;
@@ -19,17 +19,17 @@ import io.reactivex.schedulers.Schedulers;
 public class HttpMethodGet {
 
     private static HttpMethodGet httpMethodGet;
-    private JwGetter jwGetter;
+    private DocumentGetter documentGetter;
 
-    private HttpMethodGet(JwGetter jwGetter) {
-        this.jwGetter = jwGetter;
+    private HttpMethodGet(DocumentGetter documentGetter) {
+        this.documentGetter = documentGetter;
     }
 
-    public static HttpMethodGet newInstance(JwGetter jwGetter) {
+    public static HttpMethodGet newInstance(DocumentGetter documentGetter) {
         if (httpMethodGet != null ) {
             return httpMethodGet;
         } else {
-            return new HttpMethodGet(jwGetter);
+            return new HttpMethodGet(documentGetter);
         }
     }
 
@@ -37,7 +37,7 @@ public class HttpMethodGet {
         return Observable.create(new ObservableOnSubscribe<Bitmap>() {
                     @Override
                     public void subscribe(ObservableEmitter<Bitmap> e) throws Exception {
-                        e.onNext(jwGetter.getCodeBitmap());
+                        e.onNext(documentGetter.getCodeBitmap());
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -49,7 +49,7 @@ public class HttpMethodGet {
         return Observable.create(new ObservableOnSubscribe<Document>() {
                     @Override
                     public void subscribe(ObservableEmitter<Document> e) throws Exception {
-                        e.onNext(jwGetter.getExamPlanDoc(account, password, code));
+                        e.onNext(documentGetter.getExamPlanDoc(account, password, code));
                         e.onComplete();
                     }
                 })
@@ -61,7 +61,7 @@ public class HttpMethodGet {
         return Observable.create(new ObservableOnSubscribe<Document>() {
             @Override
             public void subscribe(ObservableEmitter<Document> e) throws Exception {
-                e.onNext(jwGetter.getEmptyRoomDoc(account, password, code));
+                e.onNext(documentGetter.getEmptyRoomDoc(account, password, code));
                 e.onComplete();
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
@@ -72,10 +72,20 @@ public class HttpMethodGet {
         return Observable.create(new ObservableOnSubscribe<Document>() {
             @Override
             public void subscribe(ObservableEmitter<Document> e) throws Exception {
-                e.onNext(jwGetter.getEmptyRoomDocument(date, lessonNum, __VIEWSTATE, xn, xq,account));
+                e.onNext(documentGetter.getEmptyRoomDocument(date, lessonNum, __VIEWSTATE, xn, xq,account));
                 e.onComplete();
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<Document> getBookListDocument(final String bookName, final int type) {
+        return Observable.create(new ObservableOnSubscribe<Document>() {
+            @Override
+            public void subscribe(ObservableEmitter<Document> e) throws Exception {
+                e.onNext(documentGetter.getBookListDocument(bookName, type));
+                e.onComplete();
+            }
+        });
     }
 
 }
