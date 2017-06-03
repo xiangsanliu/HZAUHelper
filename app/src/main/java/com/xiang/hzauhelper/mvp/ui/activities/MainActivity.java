@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.ResourceCursorAdapter;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -25,23 +24,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.xiang.hzauhelper.R;
-import com.xiang.hzauhelper.RequestCodes;
+import com.xiang.hzauhelper.network.RequestCodes;
 import com.xiang.hzauhelper.mvp.presenter.MainPresenter;
 import com.xiang.hzauhelper.mvp.view.MainView;
 import com.xiang.hzauhelper.network.DocumentGetter;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-
 import java.io.IOException;
-import java.net.ServerSocket;
 
 import butterknife.BindView;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, MainView {
@@ -236,6 +226,6 @@ public class MainActivity extends BaseActivity
     }
 
     public void onLoginTest() throws IOException {
-        new DocumentGetter().getBookListDocument("java");
+        startActivity(new Intent(this, SearchBookActivity.class));
     }
 }

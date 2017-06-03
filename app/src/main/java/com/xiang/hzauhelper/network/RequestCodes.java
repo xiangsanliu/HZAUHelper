@@ -1,4 +1,4 @@
-package com.xiang.hzauhelper;
+package com.xiang.hzauhelper.network;
 
 /**
  * Created by xiang on 2017/3/25.
