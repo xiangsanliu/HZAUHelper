@@ -32,6 +32,7 @@ public class SearchBookPresenter extends BasePresenter<SearchBookView> {
     private ProgressDialog progressDialog;
     private Activity activity;
     private List<Book> bookList;
+    private String nextPageUrl;
     public SearchBookPresenter(Activity activity) {
         httpMethodGet = HttpMethodGet.newInstance(new DocumentGetter());
         this.activity = activity;
@@ -73,24 +74,26 @@ public class SearchBookPresenter extends BasePresenter<SearchBookView> {
 
     private void createProgressDialog() {
         progressDialog = new ProgressDialog(activity);
-        progressDialog.setMessage("获取考试安排中");
+        progressDialog.setMessage("请稍候");
         progressDialog.create();
     }
 
     private void solveDocument(Document document) {
         Elements elements = document.getElementsByAttributeValue("class", "items");
-        Log.d("size", elements.size()+"");
         for (int i=0; i<elements.size(); i++) {
             String bookName = elements.get(i).getElementsByClass("itemTitle").text();
-            Log.d("size", elements.get(i).getElementsByAttribute("onmouseout").text());
-            Log.d("bookName", bookName);
+            String status = elements.get(i).getElementsByAttribute("onmouseout").text();
+            String author, askNumber, publisher, year, coverUrl;
+            coverUrl = elements.get(i).getElementsByTag("img").get(0).attr("src");
             Elements contentElements =  elements.get(i).getElementsByClass("content");
-            for (int j=0; j<contentElements.size(); j++) {
-                Log.d(j+"", contentElements.get(j).text());
-            }
-            Book book = new Book();
-
+            author = contentElements.get(0).text();
+            askNumber = contentElements.get(1).text();
+            publisher = contentElements.get(2).text();
+            year = contentElements.get(3).text();
+            bookList.add(new Book(bookName, publisher, askNumber, year, coverUrl, status, author));
         }
+        nextPageUrl = document.getElementsByAttributeValue("id","nav").toString();
+        nextPageUrl = nextPageUrl.substring(nextPageUrl.lastIndexOf(',')+2, nextPageUrl.lastIndexOf('\"')-1);
     }
 
 }

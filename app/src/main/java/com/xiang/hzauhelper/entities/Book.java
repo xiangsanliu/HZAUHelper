@@ -12,6 +12,35 @@ public class Book {
     private String askNumber;
     private String year;
     private String coverUrl;
+    private String status;
+    private String author;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public Book(String name, String publisher, String askNumber, String year, String coverUrl
+            , String status, String author) {
+        this.name = name;
+        this.publisher = publisher;
+        this.askNumber = askNumber;
+        this.year = year;
+        this.coverUrl = coverUrl;
+        this.status = status;
+        this.author = author;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 
     public String getName() {
         return name;
