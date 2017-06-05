@@ -7,10 +7,15 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.xiang.hzauhelper.R;
+import com.xiang.hzauhelper.mvp.presenter.SearchBookPresenter;
 import com.xiang.hzauhelper.mvp.view.SearchBookView;
+import com.xiang.hzauhelper.network.RequestCodes;
 
 import butterknife.BindView;
 
@@ -20,14 +25,35 @@ public class SearchBookActivity extends BaseActivity implements SearchBookView {
     Toolbar toolbar;
     @BindView(R.id.book_list)
     RecyclerView bookList;
+    @BindView(R.id.search_view)
+    MaterialSearchView searchView;
+
+    SearchBookPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        presenter = new SearchBookPresenter(this);
+        presenter.attachView(this);
+        presenter.onCreate();
     }
 
     @Override
     protected void initViews() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d("query", query);
+                presenter.setBookList(query, RequestCodes.LIB_CHINESE);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
     }
 
     @Override
@@ -37,23 +63,19 @@ public class SearchBookActivity extends BaseActivity implements SearchBookView {
 
     @Override
     public void showProgress(ProgressDialog progressDialog) {
-
+        progressDialog.show();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_book, menu);
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
+        MenuItem item  = menu.findItem(R.id.action_search);
+        searchView.setMenuItem(item);
         return true;
     }
 
     @Override
     public void dismissProgress(ProgressDialog progressDialog) {
-
+        progressDialog.dismiss();
     }
 }

@@ -39,7 +39,9 @@
             android:label="空教室查询"
             android:parentActivityName=".mvp.ui.activities.MainActivity"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".mvp.ui.activities.SearchBookActivity"></activity>
+        <activity
+            android:name=".mvp.ui.activities.SearchBookActivity"
+            android:parentActivityName=".mvp.ui.activities.MainActivity"/>
     </application>
 
 </manifest>

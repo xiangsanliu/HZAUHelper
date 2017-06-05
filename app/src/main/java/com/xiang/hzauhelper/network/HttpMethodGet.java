@@ -85,7 +85,7 @@ public class HttpMethodGet {
                 e.onNext(documentGetter.getBookListDocument(bookName, type));
                 e.onComplete();
             }
-        });
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
     }
 
 
