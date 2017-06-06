@@ -179,6 +179,7 @@ public class DocumentGetter {
     public Document getBookListDocument(String bookName, int type) throws IOException {
         String url = "http://218.199.76.6:8991/F/";
         Request request = new Request.Builder()
+                .addHeader("Hosts", "218.199.76.6:8991")
                 .url(url)
                 .build();
         okHttpClient = new OkHttpClient();
