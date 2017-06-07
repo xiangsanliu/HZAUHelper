@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.xiang.hzauhelper.R;
+import com.xiang.hzauhelper.mvp.presenter.LibHistoryPresenter;
 import com.xiang.hzauhelper.network.RequestCodes;
 import com.xiang.hzauhelper.mvp.presenter.MainPresenter;
 import com.xiang.hzauhelper.mvp.view.MainView;
@@ -95,18 +96,10 @@ public class MainActivity extends BaseActivity
                 onEmptyRoom();
                 break;
             case R.id.login:
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            onLoginTest();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
+                onLoginTest();
                 break;
+            case R.id.book_history:
+                startActivity(new Intent(MainActivity.this, LibHistoryActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -225,7 +218,7 @@ public class MainActivity extends BaseActivity
 
     }
 
-    public void onLoginTest() throws IOException {
+    public void onLoginTest() {
         startActivity(new Intent(this, SearchBookActivity.class));
     }
 }

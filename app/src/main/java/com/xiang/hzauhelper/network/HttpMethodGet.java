@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 
 import org.jsoup.nodes.Document;
 import java.io.IOException;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -88,5 +89,33 @@ public class HttpMethodGet {
         }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
     }
 
+    public Observable<Document> getNextBookListDocument(final String nextPageUrl) {
+        return Observable.create(new ObservableOnSubscribe<Document>() {
+            @Override
+            public void subscribe(ObservableEmitter<Document> e) throws Exception {
+                e.onNext(documentGetter.getNextBookListDocument(nextPageUrl));
+                e.onComplete();
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
+    }
 
+    public Observable<Document> getMyLibDoc(final String userName, final String password, final String checkCode) {
+        return Observable.create(new ObservableOnSubscribe<Document>() {
+            @Override
+            public void subscribe(ObservableEmitter<Document> e) throws Exception {
+                e.onNext(documentGetter.login(userName, password, checkCode));
+                e.onComplete();
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<Bitmap> getLibCheckCode() {
+        return Observable.create(new ObservableOnSubscribe<Bitmap>() {
+            @Override
+            public void subscribe(ObservableEmitter<Bitmap> e) throws Exception {
+                e.onNext(documentGetter.getLibCheckCode());
+                e.onComplete();
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
+    }
 }

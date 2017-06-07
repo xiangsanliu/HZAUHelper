@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <litepal>
     <dbname value="ExamTerm">
-
     </dbname>
     <version value="1" >
-
     </version>
     <list>
-        <mapping class="com.xiang.hzauhelper.entities.ExamTerm">
-
-        </mapping>
+        <mapping class="com.xiang.hzauhelper.entities.ExamTerm"/>
+        <mapping class="com.xiang.hzauhelper.entities.BookHistory"/>
     </list>
 </litepal>

@@ -3,7 +3,10 @@ package com.xiang.hzauhelper.mvp.presenter;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.xiang.hzauhelper.adapter.BookListAdapter;
 import com.xiang.hzauhelper.entities.Book;
 import com.xiang.hzauhelper.mvp.view.AccountSettingView;
 import com.xiang.hzauhelper.mvp.view.SearchBookView;
@@ -33,6 +36,9 @@ public class SearchBookPresenter extends BasePresenter<SearchBookView> {
     private Activity activity;
     private List<Book> bookList;
     private String nextPageUrl;
+    private BookListAdapter bookListAdapter;
+    private int pageNum = 1;
+    private String feedback = "";
     public SearchBookPresenter(Activity activity) {
         httpMethodGet = HttpMethodGet.newInstance(new DocumentGetter());
         this.activity = activity;
@@ -41,7 +47,7 @@ public class SearchBookPresenter extends BasePresenter<SearchBookView> {
     @Override
     public void onCreate() {
         createProgressDialog();
-        bookList = new ArrayList<>();
+        initBookList();
     }
 
 
@@ -50,6 +56,8 @@ public class SearchBookPresenter extends BasePresenter<SearchBookView> {
         httpMethodGet.getBookListDocument(bookName, type).subscribe(new Observer<Document>() {
             @Override
             public void onSubscribe(Disposable d) {
+                bookList.clear();
+                bookListAdapter.notifyDataSetChanged();
                 view.showProgress(progressDialog);
             }
 
@@ -80,6 +88,15 @@ public class SearchBookPresenter extends BasePresenter<SearchBookView> {
 
     private void solveDocument(Document document) {
         Elements elements = document.getElementsByAttributeValue("class", "items");
+        feedback = document.getElementById("feedbackbar").text();
+        if (feedback.length() >2 ) {
+            showToast("没有更多了");
+            bookListAdapter.loadMoreComplete();
+            bookListAdapter.setEnableLoadMore(false);
+            return;
+        } else {
+            bookListAdapter.setEnableLoadMore(true);
+        }
         for (int i=0; i<elements.size(); i++) {
             String bookName = elements.get(i).getElementsByClass("itemTitle").text();
             String status = elements.get(i).getElementsByAttribute("onmouseout").text();
@@ -94,6 +111,46 @@ public class SearchBookPresenter extends BasePresenter<SearchBookView> {
         }
         nextPageUrl = document.getElementsByAttributeValue("id","nav").toString();
         nextPageUrl = nextPageUrl.substring(nextPageUrl.lastIndexOf(',')+2, nextPageUrl.lastIndexOf('\"')-1);
+        nextPageUrl = nextPageUrl + pageNum + '1';
+
+        bookListAdapter.notifyDataSetChanged();
+    }
+
+    private void initBookList() {
+        bookList = new ArrayList<>();
+        bookListAdapter = new BookListAdapter(bookList, activity);
+        bookListAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
+            @Override
+            public void onLoadMoreRequested() {
+                setNextBookList();
+            }
+        });
+        view.initBookList(bookListAdapter);
+    }
+
+    private void setNextBookList() {
+        httpMethodGet.getNextBookListDocument(nextPageUrl).subscribe(new Observer<Document>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+            }
+
+            @Override
+            public void onNext(Document document) {
+                solveDocument(document);
+                pageNum++;
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                bookListAdapter.loadMoreComplete();
+            }
+
+            @Override
+            public void onComplete() {
+                bookListAdapter.loadMoreComplete();
+            }
+        });
     }
 
 }

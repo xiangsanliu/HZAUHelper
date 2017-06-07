@@ -17,6 +17,10 @@
         android:id="@+id/login"
         android:title="登陆"/>
 
+    <item
+        android:id="@+id/book_history"
+        android:title="借阅历史"/>
+
 
 
 </menu>

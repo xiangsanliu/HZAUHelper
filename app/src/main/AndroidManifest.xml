@@ -41,7 +41,8 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".mvp.ui.activities.SearchBookActivity"
-            android:parentActivityName=".mvp.ui.activities.MainActivity"/>
+            android:parentActivityName=".mvp.ui.activities.MainActivity" />
+        <activity android:name=".mvp.ui.activities.LibHistoryActivity"></activity>
     </application>
 
 </manifest>

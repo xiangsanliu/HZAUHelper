@@ -8,6 +8,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -25,9 +26,14 @@ public class DocumentGetter {
 
     private OkHttpClient okHttpClient;
     private String cookie;
+    private LoginToLib loginToLib;
+
+    public DocumentGetter() {
+        loginToLib = new LoginToLib();
+    }
 
     private final String MAIN_URL = "http://jw.hzau.edu.cn/";
-    String emptyRoomUrl;
+    private String emptyRoomUrl;
 //    private String examPlanUrl;
 //    private String courseTableUrl;
 
@@ -176,7 +182,8 @@ public class DocumentGetter {
 //        Response courseResponse = okHttpClient.newCall(courseRequest).execute();
 //        return Jsoup.parse(courseResponse.body().string());
 //    }
-    public Document getBookListDocument(String bookName, int type) throws IOException {
+    Document getBookListDocument(String bookName, int type) throws IOException {
+
         String url = "http://218.199.76.6:8991/F/";
         Request request = new Request.Builder()
                 .addHeader("Hosts", "218.199.76.6:8991")
@@ -187,6 +194,7 @@ public class DocumentGetter {
         String content = response.body().string();
         content = content.substring(content.lastIndexOf("http"));
         url = content.substring(0, content.indexOf('\''));
+        Log.d("url", url);
         request = new Request.Builder()
                 .url(url)
                 .build();
@@ -194,6 +202,7 @@ public class DocumentGetter {
         Document document = Jsoup.parse(response.body().string());
         Elements elements = document.getElementsByAttributeValue("name", "form1");
         url = elements.get(0).attr("action");
+        Log.d("url", url);
 
         if (type == RequestCodes.LIB_CHINESE) {
             url = url + "?func=find-b&find_code=WRD&request="+bookName+"&local_base=HZA01&filter_code_1=" +
@@ -211,6 +220,23 @@ public class DocumentGetter {
                 .build();
         response = okHttpClient.newCall(request).execute();
         return Jsoup.parse(response.body().string());
+    }
+
+    Document getNextBookListDocument(String nextPageUrl) throws IOException {
+        Request request = new Request.Builder()
+                .url(nextPageUrl)
+                .build();
+        okHttpClient = new OkHttpClient();
+        Response response = okHttpClient.newCall(request).execute();
+        return Jsoup.parse(response.body().string());
+    }
+
+    Document login(String userName, String password, String checkCode) throws Exception {
+        return loginToLib.getDocument(userName, password, checkCode);
+    }
+
+    Bitmap getLibCheckCode() throws IOException {
+        return loginToLib.getCheckCodeImage();
     }
 
 }
