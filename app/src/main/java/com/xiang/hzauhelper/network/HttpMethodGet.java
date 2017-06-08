@@ -2,8 +2,11 @@ package com.xiang.hzauhelper.network;
 
 import android.graphics.Bitmap;
 
+import com.xiang.hzauhelper.entities.BookHistory;
+
 import org.jsoup.nodes.Document;
 import java.io.IOException;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -99,11 +102,12 @@ public class HttpMethodGet {
         }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
     }
 
-    public Observable<Document> getMyLibDoc(final String userName, final String password, final String checkCode) {
-        return Observable.create(new ObservableOnSubscribe<Document>() {
+
+    public Observable<List<BookHistory>> getBookHistory(final String userName, final String password, final String checkCode) {
+        return Observable.create(new ObservableOnSubscribe<List<BookHistory>>() {
             @Override
-            public void subscribe(ObservableEmitter<Document> e) throws Exception {
-                e.onNext(documentGetter.login(userName, password, checkCode));
+            public void subscribe(ObservableEmitter<List<BookHistory>> e) throws Exception {
+                e.onNext(documentGetter.getBookHistoryDoc(userName, password, checkCode));
                 e.onComplete();
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
@@ -118,4 +122,25 @@ public class HttpMethodGet {
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
     }
+
+    public Observable<String> continueBook(final String url) {
+        return Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(ObservableEmitter<String> e) throws Exception {
+                e.onNext(documentGetter.continuedBook(url));
+                e.onComplete();
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<List<BookHistory>> refreshtBookHistory() {
+        return Observable.create(new ObservableOnSubscribe<List<BookHistory>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<BookHistory>> e) throws Exception {
+                e.onNext(documentGetter.refreshBookHistory());
+                e.onComplete();
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
+    }
+
 }

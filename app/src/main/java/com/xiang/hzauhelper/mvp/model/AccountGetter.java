@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 
 /**
  * Created by xiang on 2017/3/23.
+ *
  */
 
 public class AccountGetter {

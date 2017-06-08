@@ -4,11 +4,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.xiang.hzauhelper.entities.BookHistory;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -231,12 +234,20 @@ public class DocumentGetter {
         return Jsoup.parse(response.body().string());
     }
 
-    Document login(String userName, String password, String checkCode) throws Exception {
+    List<BookHistory> getBookHistoryDoc(String userName, String password, String checkCode) throws Exception {
         return loginToLib.getDocument(userName, password, checkCode);
     }
 
     Bitmap getLibCheckCode() throws IOException {
         return loginToLib.getCheckCodeImage();
+    }
+
+    String continuedBook(String url) throws IOException {
+        return loginToLib.continuedBook(url);
+    }
+
+    List<BookHistory> refreshBookHistory() throws IOException {
+        return loginToLib.getBookHistories();
     }
 
 }

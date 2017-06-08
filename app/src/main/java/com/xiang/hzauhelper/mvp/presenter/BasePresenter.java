@@ -25,8 +25,8 @@ public abstract class BasePresenter <T extends BaseView> {
     }
 
     public void showProgress(){
-
     }
+
     public void dismissProgress(){
     }
 

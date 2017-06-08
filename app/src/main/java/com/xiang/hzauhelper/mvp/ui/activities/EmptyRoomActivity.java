@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -112,10 +111,10 @@ public class EmptyRoomActivity extends BaseActivity implements EmptyRoomView {
     @Override
     public void initSpinner(String[] startDate, String[] lessonNum) {
         ArrayAdapter<String>  adapter;
-        adapter = new ArrayAdapter<>(this, R.layout.my_spinner_item, startDate);
+        adapter = new ArrayAdapter<>(this, R.layout.item_my_spinner, startDate);
         adapter.setDropDownViewResource(R.layout.my_dropdown_spinner_item);
         selectDate.setAdapter(adapter);
-        adapter = new ArrayAdapter<>(this, R.layout.my_spinner_item, lessonNum);
+        adapter = new ArrayAdapter<>(this, R.layout.item_my_spinner, lessonNum);
         adapter.setDropDownViewResource(R.layout.my_dropdown_spinner_item);
         selectLessonNum.setAdapter(adapter);
         presenter.dismissProgress();

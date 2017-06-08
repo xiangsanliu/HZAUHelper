@@ -2,6 +2,11 @@ package com.xiang.hzauhelper.network;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
+
+import com.xiang.hzauhelper.entities.Book;
+import com.xiang.hzauhelper.entities.BookHistory;
+import com.xiang.hzauhelper.mvp.presenter.LibHistoryPresenter;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -12,16 +17,22 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by xiang on 2017/6/7.
  *
  */
-public class LoginToLib {
+class LoginToLib {
+    LoginToLib() {
+        bookHistories = new ArrayList<>();
+    }
 
     private final String LOGIN_URL = "https://sso.hzau.edu.cn:7002/cas/login";
     private final String HOST_URL = "http://218.199.76.6:8991/F/";
     private final String CHECK_CODE_URL = "https://sso.hzau.edu.cn:7002/cas/captcha.htm";
+    private String unReturnedUrl, returnedUrl;
     private String s;
     private OkHttpClient okHttpClient = new OkHttpClient();
     private Request request;
@@ -30,8 +41,9 @@ public class LoginToLib {
     private String lt;
     private String execution;
     private String _eventId;
+    private List<BookHistory> bookHistories;
 
-    Document getDocument(String userName, String password
+    List<BookHistory> getDocument(String userName, String password
             , String checkCode) throws Exception {
         String url = cookie.substring(10, cookie.indexOf(';'));
         url = LOGIN_URL + ';'+ "jsessionid" +url + s;
@@ -63,10 +75,28 @@ public class LoginToLib {
 //                .addHeader("Cookie", psd_handle)
                 .build();
         response = okHttpClient.newCall(request).execute();
-        return Jsoup.parse(response.body().string());
+
+        document = Jsoup.parse(response.body().string());
+        Elements elements = document.getElementsByTag("a");
+        url = elements.get(2).attr("href");
+
+        request = new Request.Builder()
+                .url(url)
+                .build();
+        response = okHttpClient.newCall(request).execute();
+        document = Jsoup.parse(response.body().string());
+
+        elements = document.getElementsByClass("indent1").get(0).getElementsByTag("a");
+        unReturnedUrl = elements.get(0).attr("href");
+        returnedUrl = elements.get(1).attr("href");
+
+        unReturnedUrl = unReturnedUrl.substring(24, unReturnedUrl.length()-3);
+        returnedUrl = returnedUrl.substring(24, returnedUrl.length()-3);
+
+        return getBookHistories();
     }
 
-    Bitmap getCheckCodeImage() throws IOException {
+    Bitmap getCheckCodeImage() throws IOException {     //设置验证码，并保证验证码的cookie和post的cookie是一样的。
         setCookie();
         request = new Request.Builder()
                 .addHeader("Cookie", cookie)
@@ -98,6 +128,8 @@ public class LoginToLib {
         s= "?service=http%3a%2f%2f218%2e199%2e76%2e6%3a8991%2fcas%2fpds%5fmain%3ffunc%3dload%2dl" +
                 "ogin%26calling%5fsystem%3daleph%26institute%3dHZA50%26PDS%5fHANDLE%3d%26url%3dhttp%3a%2f%2f" +
                 "218%2e199%2e76%2e6%3a8991%2fF%2f"+ s1 +"%2d"+ s1 +"%3ffunc%3d%26filer%3d";
+
+        //到这里为止，就抓取到了登陆的URL地址，并且获取到了Cookie，和一些关键数据
         request = new Request.Builder()
                 .url(LOGIN_URL+s)
                 .build();
@@ -108,6 +140,52 @@ public class LoginToLib {
         execution = elements.get(1).attr("value");
         _eventId = elements.get(2).attr("value");
         cookie =  response.header("Set-Cookie");
+    }
+
+    String continuedBook(String url) throws IOException {
+        request = new Request.Builder()
+                .url(url)
+                .build();
+        response = okHttpClient.newCall(request).execute();
+        return response.code()+"";
+
+    }
+
+    List<BookHistory> getBookHistories() throws IOException {   //登陆成功，并返回数据
+        Document document;
+        Elements elements;
+        request = new Request.Builder()
+                .url(unReturnedUrl)
+                .build();
+        response = okHttpClient.newCall(request).execute();
+        document = Jsoup.parse(response.body().string());
+        elements = document.getElementsByClass("td1");
+        elements.remove(0);
+        for (int i=0; i<elements.size(); i+=11) {
+            String bookName = elements.get(i+3).text();
+            String author = elements.get(i+2).text();
+            String year = elements.get(i+4).text();
+            String continueUrl = elements.get(i).getAllElements().attr("href");
+            bookHistories.add(new BookHistory(bookName, year, author, continueUrl));
+        }
+
+        request = new Request.Builder()
+                .url(returnedUrl)
+                .build();
+        response = okHttpClient.newCall(request).execute();
+        document = Jsoup.parse(response.body().string());
+        elements = document.getElementsByClass("td1");
+        elements.remove(0);
+        for (int i=0; i<elements.size(); i+=10) {
+            String bookName = elements.get(i+2).text();
+            String author = elements.get(i+1).text();
+            String year = elements.get(i+3).text();
+            String borrowTime = "应还日期：" + elements.get(i+4).text();
+            String retrunTime = "归还日期：" + elements.get(i+6).text();
+            String fine = elements.get(i+8).text();
+            bookHistories.add(new BookHistory(bookName, year, author, retrunTime, fine, borrowTime));
+        }
+        return bookHistories;
     }
 
 }

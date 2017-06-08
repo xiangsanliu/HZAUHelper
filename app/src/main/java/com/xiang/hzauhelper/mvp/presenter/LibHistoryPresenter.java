@@ -62,10 +62,6 @@ public class LibHistoryPresenter extends BasePresenter<LibHistoryView> {
 //        loadBookHistory(bookHistoryList);
     }
 
-    private void loadBookHistory(List<BookHistory> bookHistoryList) {
-        BookHistoryAdapter adapter = new BookHistoryAdapter(bookHistoryList);
-        view.loadBookHistoryList(adapter);
-    }
 
     public void showCheckCodeInputer() {
         view.showProgress(progressDialog);
@@ -93,31 +89,82 @@ public class LibHistoryPresenter extends BasePresenter<LibHistoryView> {
     }
 
     public void setBookHistoryDoc(String code) {
-        httpMethodGet.getMyLibDoc(account, passwordLib, code).subscribe(new Observer<Document>() {
+        httpMethodGet.getBookHistory(account, passwordLib, code).subscribe(new Observer<List<BookHistory>>() {
             @Override
             public void onSubscribe(Disposable d) {
                 view.showProgress(progressDialog);
             }
 
             @Override
-            public void onNext(Document document) {
-//                DataSupport.deleteAll(BookHistory.class);
-                solveDoc(document);
-                view.dismissProgress(progressDialog);
+            public void onNext(List<BookHistory> bookHistories) {
+                view.loadBookHistoryList(new BookHistoryAdapter(bookHistories, LibHistoryPresenter.this));
             }
 
             @Override
             public void onError(Throwable e) {
-
+                view.dismissProgress(progressDialog);
+                e.printStackTrace();
             }
 
             @Override
             public void onComplete() {
+                view.dismissProgress(progressDialog);
             }
         });
     }
 
-    private void solveDoc(Document document) {
-        Log.d("document", document.text());
+    public void continuedBook(String url) {
+        httpMethodGet.continueBook(url).subscribe(new Observer<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                view.showProgress(progressDialog);
+            }
+
+            @Override
+            public void onNext(String s) {
+                Log.d("code", s);
+                if (s.equals("200")) {
+                    showToast("续借成功, 请刷新");
+//                    refreshBookHistory();
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                view.showProgress(progressDialog);
+            }
+
+            @Override
+            public void onComplete() {
+                view.showProgress(progressDialog);
+            }
+        });
     }
+
+    private void refreshBookHistory() {
+        httpMethodGet.refreshtBookHistory().subscribe(new Observer<List<BookHistory>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                view.showProgress(progressDialog);
+            }
+
+            @Override
+            public void onNext(List<BookHistory> bookHistories) {
+                view.loadBookHistoryList(new BookHistoryAdapter(bookHistories, LibHistoryPresenter.this));
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                view.dismissProgress(progressDialog);
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onComplete() {
+                view.dismissProgress(progressDialog);
+            }
+        });
+    }
+
 }

@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +46,7 @@ public class LibHistoryActivity extends BaseActivity implements LibHistoryView {
     @Override
     protected void initViews() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        bookHistoryList.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override
@@ -101,7 +103,7 @@ public class LibHistoryActivity extends BaseActivity implements LibHistoryView {
 
     @Override
     public void loadBookHistoryList(BookHistoryAdapter adapter) {
-
+        bookHistoryList.setAdapter(adapter);
     }
 
     @OnClick(R.id.refresh_book)
