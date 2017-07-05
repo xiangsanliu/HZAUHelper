@@ -3,24 +3,45 @@
 
     <item
         android:id="@+id/account_setting"
-        android:icon="@drawable/ic_account_circle_white_24dp"
+        android:icon="@drawable/ic_account_box_black_24dp"
         android:title="@string/account_setting" />
-    <item
-        android:id="@+id/exam_plan"
-        android:icon="@drawable/ic_description_black_24dp"
-        android:title="@string/exam_plan"/>
-    <item
-        android:id="@+id/empty_room"
-        android:icon="@drawable/empty_room"
-        android:title="@string/empty_room"/>
-    <item
-        android:id="@+id/login"
-        android:title="登陆"/>
-
-    <item
-        android:id="@+id/book_history"
-        android:title="借阅历史"/>
+    <item android:title="@string/jw">
+        <menu>
+            <item
+                android:id="@+id/exam_plan"
+                android:icon="@drawable/ic_description_black_24dp"
+                android:title="@string/exam_plan"/>
+            <item
+                android:id="@+id/empty_room"
+                android:icon="@drawable/ic_picture_in_picture_alt_black_24dp"
+                android:title="@string/empty_room"/>
+        </menu>
+    </item>
 
 
+
+
+    <item android:title="@string/library">
+        <menu>
+            <item
+                android:icon="@drawable/ic_search_black_24dp"
+                android:id="@+id/query_book"
+                android:title="@string/query_book"/>
+
+            <item
+                android:icon="@drawable/ic_history_black_24dp"
+                android:id="@+id/book_history"
+                android:title="@string/book_history"/>
+        </menu>
+    </item>
+
+    <item android:title="@string/pe">
+        <menu>
+            <item
+                android:icon="@drawable/ic_directions_run_black_24dp"
+                android:id="@+id/query_southlake"
+                android:title="@string/query_southlake"/>
+        </menu>
+    </item>
 
 </menu>

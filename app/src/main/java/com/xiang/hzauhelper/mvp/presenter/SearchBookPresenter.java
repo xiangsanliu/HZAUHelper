@@ -38,7 +38,7 @@ public class SearchBookPresenter extends BasePresenter<SearchBookView> {
     private String nextPageUrl;
     private BookListAdapter bookListAdapter;
     private int pageNum = 1;
-    private String feedback = "";
+
     public SearchBookPresenter(Activity activity) {
         httpMethodGet = HttpMethodGet.newInstance(new DocumentGetter());
         this.activity = activity;
@@ -53,6 +53,7 @@ public class SearchBookPresenter extends BasePresenter<SearchBookView> {
 
 
     public void setBookList(String bookName, int type) {
+        view.setTitle(bookName);
         httpMethodGet.getBookListDocument(bookName, type).subscribe(new Observer<Document>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -88,7 +89,7 @@ public class SearchBookPresenter extends BasePresenter<SearchBookView> {
 
     private void solveDocument(Document document) {
         Elements elements = document.getElementsByAttributeValue("class", "items");
-        feedback = document.getElementById("feedbackbar").text();
+        String feedback = document.getElementById("feedbackbar").text();
         if (feedback.length() >2 ) {
             showToast("没有更多了");
             bookListAdapter.loadMoreComplete();

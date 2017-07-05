@@ -13,4 +13,5 @@ import java.util.List;
 
 public interface SearchBookView extends BaseView {
     void initBookList(RecyclerView.Adapter adapter);
+    void setTitle(String title);
 }

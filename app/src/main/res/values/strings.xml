@@ -17,4 +17,10 @@
     <string name="empty_room">空教室查询</string>
     <string name="query">查询</string>
     <string name="search">搜索</string>
+    <string name="query_book">馆藏查询</string>
+    <string name="book_history">借阅历史</string>
+    <string name="library">图书馆</string>
+    <string name="jw">教务系统</string>
+    <string name="pe">体育系统</string>
+    <string name="query_southlake">南湖跑查询</string>
 </resources>

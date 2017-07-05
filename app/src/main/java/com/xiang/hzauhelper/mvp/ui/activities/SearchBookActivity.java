@@ -85,4 +85,9 @@ public class SearchBookActivity extends BaseActivity implements SearchBookView {
         bookList.setLayoutManager(new LinearLayoutManager(this));
         bookList.setAdapter(adapter);
     }
+
+    @Override
+    public void setTitle(String title) {
+        toolbar.setTitle(title);
+    }
 }

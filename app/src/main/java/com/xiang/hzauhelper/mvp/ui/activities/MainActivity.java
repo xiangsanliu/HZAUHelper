@@ -45,7 +45,6 @@ public class MainActivity extends BaseActivity
     TextView accountTV;
 
     MainPresenter presenter;
-    String cookieJw = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,12 +64,12 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.main, menu);
+//        return true;
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -90,16 +89,22 @@ public class MainActivity extends BaseActivity
                 startActivityForResult(new Intent(this, AccountSettingActivity.class), RequestCodes.SETACCOUNT);
                 break;
             case R.id.exam_plan:
-                onExamPlan();
+                if (presenter.checkJWAccount()) {
+                    onExamPlan();
+                }
                 break;
             case R.id.empty_room:
-                onEmptyRoom();
+                if (presenter.checkJWAccount()) {
+                    onEmptyRoom();
+                }
                 break;
-            case R.id.login:
-                onLoginTest();
+            case R.id.query_book:
+                startActivity(new Intent(this, SearchBookActivity.class));
                 break;
             case R.id.book_history:
-                startActivity(new Intent(MainActivity.this, LibHistoryActivity.class));
+                if (presenter.checkLibAccount()) {
+                    startActivity(new Intent(MainActivity.this, LibHistoryActivity.class));
+                }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -114,7 +119,6 @@ public class MainActivity extends BaseActivity
         drawerLayout.setDrawerListener(toggle);
         toggle.syncState();
         navView.setNavigationItemSelectedListener(this);
-//        View view = navView.inflateHeaderView(R.layout.nav_header_main);
         accountTV = (TextView) navView.getHeaderView(0).findViewById(R.id.account);
     }
 
@@ -129,31 +133,14 @@ public class MainActivity extends BaseActivity
         switch (requestCode) {
             case RequestCodes.SETACCOUNT:
                 if (resultCode == RESULT_OK) {
-                    login();
+//                    login();
                 }
                 break;
             case RequestCodes.SETCOOKIEJW:
-                if (resultCode == RESULT_OK) {
-                    cookieJw = data.getStringExtra("cookieJw");
-                }
+
         }
     }
 
-    private void login() {
-        Log.d(TAG, "login");
-    }
-
-//    private void onExamPlan() throws IOException {
-//        if (cookieJw.length()>0) {
-//            Intent intent = new Intent(MainActivity.this, ExamPlanActivity.class);
-//            intent.putExtra("account", presenter.getAccount());
-//            intent.putExtra("passwordJw", presenter.getPasswordJw());
-//            intent.putExtra("cookieJw", cookieJw);
-//            startActivity(intent);
-//        } else {
-//            presenter.showCheckCodeInputer();
-//        }
-//    }
 
     private void onExamPlan() {
         Intent intent = new Intent(MainActivity.this, ExamPlanActivity.class);
@@ -164,10 +151,6 @@ public class MainActivity extends BaseActivity
         startActivity(new Intent(this, EmptyRoomActivity.class));
     }
 
-    @Override
-    public void loadBitmap(Bitmap bitmap) {
-        createCheckCodeDialog(bitmap).create().show();
-    }
 
     @Override
     public void loadAccountTv(String account) {
@@ -180,33 +163,33 @@ public class MainActivity extends BaseActivity
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    private AlertDialog.Builder createCheckCodeDialog(Bitmap bitmap) {
-        @SuppressLint("InflateParams") final View view = LayoutInflater.from(MainActivity.this)
-                .inflate(R.layout.dialog_check_code, null);
-        ImageView imageView = (ImageView) view.findViewById(R.id.code_image);
-        imageView.setImageBitmap(bitmap);
-        return new AlertDialog.Builder(this)
-                .setTitle("请输入验证码")
-                .setView(view)
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                })
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        String checkCode = ((EditText)view.findViewById(R.id.code_edit)).getText().toString();
-                        Intent intent = new Intent(MainActivity.this, ExamPlanActivity.class);
-                        intent.putExtra("account", presenter.getAccount());
-                        intent.putExtra("passwordJw", presenter.getPasswordJw());
-                        intent.putExtra("checkCode", checkCode);
-                        hideSoftInput(view.findViewById(R.id.code_edit));
-                        startActivityForResult(intent, RequestCodes.SETCOOKIEJW);
-                    }
-                });
-    }
+//    private AlertDialog.Builder createCheckCodeDialog(Bitmap bitmap) {
+//        @SuppressLint("InflateParams") final View view = LayoutInflater.from(MainActivity.this)
+//                .inflate(R.layout.dialog_check_code, null);
+//        ImageView imageView = (ImageView) view.findViewById(R.id.code_image);
+//        imageView.setImageBitmap(bitmap);
+//        return new AlertDialog.Builder(this)
+//                .setTitle("请输入验证码")
+//                .setView(view)
+//                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                    }
+//                })
+//                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        String checkCode = ((EditText)view.findViewById(R.id.code_edit)).getText().toString();
+//                        Intent intent = new Intent(MainActivity.this, ExamPlanActivity.class);
+//                        intent.putExtra("account", presenter.getAccount());
+//                        intent.putExtra("passwordJw", presenter.getPasswordJw());
+//                        intent.putExtra("checkCode", checkCode);
+//                        hideSoftInput(view.findViewById(R.id.code_edit));
+//                        startActivityForResult(intent, RequestCodes.SETCOOKIEJW);
+//                    }
+//                });
+//    }
 
     @Override
     public void showProgress(ProgressDialog progressDialog) {
@@ -218,7 +201,4 @@ public class MainActivity extends BaseActivity
 
     }
 
-    public void onLoginTest() {
-        startActivity(new Intent(this, SearchBookActivity.class));
-    }
 }

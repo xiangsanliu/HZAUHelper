@@ -40,9 +40,10 @@
             android:parentActivityName=".mvp.ui.activities.MainActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
+            android:label="馆藏查询"
             android:name=".mvp.ui.activities.SearchBookActivity"
             android:parentActivityName=".mvp.ui.activities.MainActivity" />
-        <activity android:name=".mvp.ui.activities.LibHistoryActivity"></activity>
+        <activity android:name=".mvp.ui.activities.LibHistoryActivity" />
     </application>
 
 </manifest>
