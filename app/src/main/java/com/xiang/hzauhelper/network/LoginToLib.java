@@ -166,7 +166,18 @@ class LoginToLib {
             String author = elements.get(i+2).text();
             String year = elements.get(i+4).text();
             String continueUrl = elements.get(i).getAllElements().attr("href");
-            bookHistories.add(new BookHistory(bookName, year, author, continueUrl));
+            request = new Request.Builder()
+                    .url(continueUrl)
+                    .build();
+            response = okHttpClient.newCall(request).execute();
+            document = Jsoup.parse(response.body().string());
+            elements = document.getElementsByClass("td1");
+            String borrowTime = "借出日期：" + elements.get(1).text();
+            continueUrl = elements.get(5).getAllElements().attr("HREF");
+            String fine = elements.get(7).text();
+            String returnTime = "应还日期：" + elements.get(3).text().substring(0, 8);
+            bookHistories.add(new BookHistory(bookName, year, author, borrowTime
+                    , continueUrl, fine, returnTime));
         }
 
         request = new Request.Builder()

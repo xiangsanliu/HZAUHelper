@@ -8,7 +8,7 @@
     <string name="account_setting">设置账号</string>
     <string name="please_input_account">在这里输入学号</string>
     <string name="please_input_password_jw">教务系统密码</string>
-    <string name="please_input_password_lib">图书馆密码，默认密码为学号</string>
+    <string name="please_input_password_lib">图书馆密码，默认密码为出生年月日，如19700101</string>
     <string name="please_input_password_pe">体育系统密码，默认密码为6个8</string>
     <string name="exam_plan">考试安排</string>
     <string name="exam_time">考试时间:</string>
@@ -23,4 +23,6 @@
     <string name="jw">教务系统</string>
     <string name="pe">体育系统</string>
     <string name="query_southlake">南湖跑查询</string>
+    <string name="exit">退出</string>
+    <string name="more">更多</string>
 </resources>

@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/account_setting"
-        android:icon="@drawable/ic_account_box_black_24dp"
-        android:title="@string/account_setting" />
+
     <item android:title="@string/jw">
         <menu>
             <item
@@ -41,6 +38,18 @@
                 android:icon="@drawable/ic_directions_run_black_24dp"
                 android:id="@+id/query_southlake"
                 android:title="@string/query_southlake"/>
+        </menu>
+    </item>
+    <item
+        android:title="@string/more">
+        <menu><item
+            android:id="@+id/account_setting"
+            android:icon="@drawable/ic_account_box_black_24dp"
+            android:title="@string/account_setting" />
+            <item
+                android:title="@string/exit"
+                android:id="@+id/exit"
+                android:icon="@drawable/ic_exit_to_app_black_24dp"/>
         </menu>
     </item>
 

@@ -31,6 +31,8 @@ public class LibHistoryPresenter extends BasePresenter<LibHistoryView> {
     private HttpMethodGet httpMethodGet;
     private String account, passwordLib;
     private ProgressDialog progressDialog;
+    private BookHistoryAdapter bookHistoryAdapter;
+    private List<BookHistory> bookHistories;
 
     public LibHistoryPresenter(Context context) {
         this.context = context;
@@ -58,8 +60,9 @@ public class LibHistoryPresenter extends BasePresenter<LibHistoryView> {
     }
 
     private void initBookHistoryList() {
-//        List<BookHistory> bookHistoryList = DataSupport.findAll(BookHistory.class);
-//        loadBookHistory(bookHistoryList);
+        bookHistories = DataSupport.findAll(BookHistory.class);
+        bookHistoryAdapter = new BookHistoryAdapter(bookHistories, this);
+        view.loadBookHistoryList(bookHistoryAdapter);
     }
 
 
@@ -96,8 +99,14 @@ public class LibHistoryPresenter extends BasePresenter<LibHistoryView> {
             }
 
             @Override
-            public void onNext(List<BookHistory> bookHistories) {
-                view.loadBookHistoryList(new BookHistoryAdapter(bookHistories, LibHistoryPresenter.this));
+            public void onNext(List<BookHistory> bookHistoryList) {
+                bookHistoryList.clear();
+                for (BookHistory bookHistory: bookHistoryList) {
+                    bookHistory.save();
+                    bookHistories.add(bookHistory);
+                }
+                bookHistoryAdapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -166,5 +175,6 @@ public class LibHistoryPresenter extends BasePresenter<LibHistoryView> {
             }
         });
     }
+
 
 }

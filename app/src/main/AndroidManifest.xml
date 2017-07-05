@@ -43,7 +43,10 @@
             android:label="馆藏查询"
             android:name=".mvp.ui.activities.SearchBookActivity"
             android:parentActivityName=".mvp.ui.activities.MainActivity" />
-        <activity android:name=".mvp.ui.activities.LibHistoryActivity" />
+        <activity
+            android:label="借阅历史"
+            android:parentActivityName=".mvp.ui.activities.MainActivity"
+            android:name=".mvp.ui.activities.LibHistoryActivity" />
     </application>
 
 </manifest>

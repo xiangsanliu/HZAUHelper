@@ -58,22 +58,15 @@ public class BookHistory extends DataSupport {
         this.continueUrl = "已还";
     }
 
-    public BookHistory(String name, String year, String author, String url) throws IOException {
+    public BookHistory(String name, String year, String author, String borrowTime
+            , String continueUrl, String fine, String returnTime) throws IOException {
         this.name = name;
         this.year = year;
         this.author = author;
-        OkHttpClient okHttpClient = new OkHttpClient();
-
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-        Response response = okHttpClient.newCall(request).execute();
-        Document document = Jsoup.parse(response.body().string());
-        Elements elements = document.getElementsByClass("td1");
-        borrowTime = "借出日期：" + elements.get(1).text();
-        continueUrl = elements.get(5).getAllElements().attr("HREF");
-        fine = elements.get(7).text();
-        returnTime = "应还日期：" + elements.get(3).text().substring(0, 8);
+        this.borrowTime = borrowTime;
+        this.continueUrl = continueUrl;
+        this.fine = fine;
+        this.returnTime = returnTime;
     }
 
     public String getFine() {

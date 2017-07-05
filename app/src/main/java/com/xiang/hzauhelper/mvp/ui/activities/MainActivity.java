@@ -105,6 +105,11 @@ public class MainActivity extends BaseActivity
                 if (presenter.checkLibAccount()) {
                     startActivity(new Intent(MainActivity.this, LibHistoryActivity.class));
                 }
+                break;
+            case R.id.exit:
+                finish();
+            default:
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
