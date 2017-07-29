@@ -108,6 +108,10 @@ public class MainActivity extends BaseActivity
                 break;
             case R.id.exit:
                 finish();
+                break;
+            case R.id.query_southlake:
+                onQuerySouthlake();
+                break;
             default:
 
         }
@@ -203,6 +207,10 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void dismissProgress(ProgressDialog progressDialog) {
+
+    }
+
+    private void onQuerySouthlake() {
 
     }
 
